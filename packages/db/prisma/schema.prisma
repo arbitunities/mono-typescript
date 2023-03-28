@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  address String   @unique
+  profile Profile?
+  lists   List[]
+  memberships Member[]
+}
+
+// User has many lists (create lists)
+model List {
+  id      Int      @id @default(autoincrement())
+  owner   User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId Int 
+  members Member[]
+  title   String? 
+  description String?
+}
+
+// Member belongs to list
+model Member {
+  id      Int  @id @default(autoincrement())
+  list    List @relation(fields: [listId], references: [id])
+  listId  Int
+  user    User @relation(fields: [userId], references: [id])
+  userId  Int  @unique
+}
+
+// User has one profile
+model Profile {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
+  bio    String
+}
+
