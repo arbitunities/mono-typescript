@@ -21,7 +21,7 @@ const Card: React.FC<{
 };
 
 const Home: NextPage = () => {
-  const userQuery = trpc.user.currentUser.useQuery();
+  const userQuery = trpc.user?.currentUser.useQuery();
 
   return (
     <>
